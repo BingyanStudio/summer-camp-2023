@@ -1,6 +1,7 @@
 # 🚀7.3 task
 
 ## 💡Things I Learned  
+
 - markdown(already learned)
 - git    
    *  fork -> clone -> edit -> pull request workflow  
@@ -11,8 +12,10 @@
       what is mod?   
       It is recommended to create a module for a project that you intend to share or that has external dependencies. A module provides a way to define and manage dependencies, allowing others to easily build and run your project. To create a module, you can use the go mod init command as mentioned in the previous response.
 
-## 🖥️Golang   
+## 🖥️Go
+
 ### packages   
+
 1. Every Go program is made up of packages.    
 2. import:factored or multipy import  statements   
    ~~~go
@@ -26,7 +29,9 @@
 3. export   
 In Go, a name is exported if it begins with a capital letter.   
 When importing a package, you can refer only to its exported names. Any "unexported" names are not accessible from outside the package.   
+
 ### functions   
+
 1. argument  
    ~~~go
    func add(x int, y int) int {
@@ -68,7 +73,9 @@ When importing a package, you can refer only to its exported names. Any "unexpor
       }
    }
    ~~~
-### variables
+
+### variables   
+
 1. declare   
    ~~~go
    var c, python, java bool
@@ -166,8 +173,10 @@ When importing a package, you can refer only to its exported names. Any "unexpor
    ~~~
 
    - Last-In-First-Out (LIFO) order   
-   - The deferred call's arguments are evaluated immediately, but the function call is not executed until the surrounding function returns.  
+   - The deferred call's arguments are evaluated immediately, but the function call is not executed until the surrounding function returns.   
+
 ### more types
+
 1. pointers   
    ~~~go
    var p *int
@@ -246,5 +255,6 @@ When importing a package, you can refer only to its exported names. Any "unexpor
    elem, ok = m[key]
    ~~~ 
 
-## ❓things that  I am confused about  
+## ❓things that  I am confused about   
+
    The concept of function closure  
