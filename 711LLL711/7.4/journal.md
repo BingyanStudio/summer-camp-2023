@@ -16,7 +16,7 @@
     5. 实践--用闭包实现斐波那契数列  
         思路：每次输出需要用到前两个数据，构建内层函数闭包，把他们放在外层函数中访问。
         [fibonacci](closure.go)  
-
+- go
 ## 🖥️Go 
 
 ### methods  
@@ -152,7 +152,7 @@
 3. interface values  
     interface values can be thought of as a tuple of a value and a concrete type:(value ,type)   
     接口值可以被指定为接口中不同的value和type  
-4. Interface values with nil underlying values
+4. Interface values with nil underlying values    
     If the concrete value inside the interface itself is nil, the method will be called with a nil receiver.  
 5. Nil interface values  
     A nil interface value holds neither value nor concrete type.  
@@ -181,18 +181,16 @@
     }
     ~~~
 
-some common interface  
 9. Stringers-- a commonly used interface  
     By implementing the String() method, you can control how your type is displayed when formatted as a string   
     当调用fmt时会自动寻找它的方法的定义，通过自定义String方法，可以调整输出的格式  
 10. error  
     The error type is a built-in interface similar to fmt.Stringer  
-    As with fmt.Stringer, the fmt package looks for the error interface when printing values.   
-    通过自定义error方法，可以调整错误信息打印的格式 
-
+    As with fmt.Stringer, the fmt package looks for the error interface when printing values.     
+    通过自定义error方法，可以调整错误信息打印的格式    
     ~~~go
     type error interface {
-    Error() string
+        Error() string
     }
     ~~~
 
@@ -259,14 +257,14 @@ some common interface
     e.g.   
     ~~~go
     func Index[T comparable](s []T, x T) int {
-	for i, v := range s {
-		// v and x are type T, which has the comparable
-		// constraint, so we can use == here.
-		if v == x {
-			return i
-		}
-	}
-	return -1
+        for i, v := range s {
+            // v and x are type T, which has the comparable
+            // constraint, so we can use == here.
+            if v == x {
+                return i
+            }
+        }
+        return -1
     }
     ~~~
 
@@ -275,12 +273,9 @@ some common interface
     A goroutine is a lightweight thread managed by the Go runtime.  
      use  `go f(x, y, z)`  
 2. Channels  
-    ```go
+
+    ~~~go
     ch <- v    // Send v to channel ch.
     v := <-ch  // Receive from ch, and
            // assign value to v.
-    ```       
-
-
-## summary  
-    今天一整天都在学go，学的速度明显比昨天慢了，学方法、接口这些刚接触理解的有点慢 ，不过对着exercise练习一下还是能懂的。
+    ~~~       
