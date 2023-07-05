@@ -61,3 +61,74 @@ db.<collection_name>.find(query)			// 查询表中的文档
 ```JavaScript
 db.students.find({ score : { $gt 80, $lte 100 }})
 ```
+
+## mongo-go-driver
+
+连接mongodb后，可以通过一系列操作对数据库进行增 删 改 查操作。例如，现在获取了一个集合
+``` Go
+var col *mongo.Collection = db.Collection("test")
+```
+定义一个S结构体如下
+``` Go
+type S struct {
+    Name string
+    ID uint32
+}
+//已经有了几个结构，准备插入到数据库中
+var (
+    p1 S = S{"person01", "1001"}
+    p2 S = S{"person02", "1002"}
+    p3 S = S{"person03", "1003"}
+)
+```
+1. 插入文档
+    使用`<collection>.InsertOne()`插入单个文档，使用`InsertMany()`插入多个
+
+    ``` GO
+    _, err := col.InsertOne(context.TODO(), p1)
+    if err != nil {
+        log.Fatal(err)
+        return err
+    }
+    ps := []interface{}{p2, p3}
+    _, err = col.InsertMany(context.TODO(), ps)
+    // ... 错误处理
+    ```
+2. 更新一个文档
+    使用`bson.D`来描述筛选和更新内容
+    ``` Go
+    filter := bson.D{{"name", "person1"}}
+    // filter := bson.D{{}}将会匹配所有的内容
+    // 这类似于db.col.find()
+    update := bson.D{
+	    {"$set", bson.D{
+		    {"ID", 1004},
+	    }},
+    }
+
+    _, err := col.UpdateOne(context.TODO(), filter, update)
+    // ... 错误处理
+    ```
+3. 查询文档
+    一样使用一个`bson.D`来表述筛选内容
+    ``` Go
+    var s S
+    err := col.FindOne(context.TODO(), fitler).Decode(&s)
+    // ... 错误处理
+    ```
+4. 删除文档
+    使用`<collection>.DeleteOne()`删除一个文档，`DeleteMany`删除所有匹配的文档，这意味着当所有的匹配，即`filter == bson.D{{}}`时，会删除所有文档。
+    ``` Go
+    err := col.DeleteOne(context.TODO(), filter)
+    err = col.DeleteMany(context.TODO(), filter)
+    // ... 错误处理
+    ```
+
+### bson
+MongoDB中的JSON文档存储在名为BSON(二进制编码的JSON)的二进制表示中。连接MongoDB的Go驱动程序中有两大类型表示BSON数据：D和Raw。类型D家族被用来简洁地构建使用本地Go类型的BSON对象。这对于构造传递给MongoDB的命令特别有用。D家族包括四类:
++ D：一个BSON文档。这种类型应该在顺序重要的情况下使用，比如MongoDB命令。
++ M：一张无序的map。它和D是一样的，只是它不保持顺序。
++ A：一个BSON数组。
++ E：D里面的一个元素。
+
+使用` import "go.mongodb.org/mongo-driver/bson" `来使用bson类型。
