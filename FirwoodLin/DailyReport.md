@@ -18,3 +18,16 @@
 -   学习 session 和 cookie 的认证方式
 -   配置 Arch Linux 中的 Golang 开发环境;修复了字符集缺失的问题;重装了 Linux QQ,闪退问题暂时解决
 -   新建了热身项目文件夹（雾）
+
+# 07-05
+
+计划：实现登陆注册功能
+
+实际情况：
+-  了解了 Validator 的使用
+-  Gorm 的使用
+   -  检验用户是否存在：进行查询，通过 `.RowsAffected == 0` 判断查询的结果
+-  Golang 开发规范
+   -  bool 类型的函数，直接返回判断表达式的值；不使用 if 语句
+-  （未完成）注册成功后返回 ~~cookie~~ 包含 sessionId 的 cookie
+   -  Session 的生成、存储：由于高频读写，选择 Redis 作为数据库
