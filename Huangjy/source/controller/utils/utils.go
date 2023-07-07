@@ -3,12 +3,16 @@ package utils
 import (
 	"errors"
 	"fmt"
+	"log"
+	db "myserver/database"
 	"myserver/model"
 	"reflect"
+
+	jwt "github.com/golang-jwt/jwt/v5"
 )
 
 // 检查注册信息完整和合法性
-func CheckRegisterValid(u *model.User) error {
+func CheckRegisterValid(u *model.UserInfo) error {
 	if u == nil {
 		return errors.New("nil pointer")
 	}
@@ -22,4 +26,21 @@ func CheckRegisterValid(u *model.User) error {
 	}
 	// 然后验证邮箱和电话号码的合法。。。
 	return nil
+}
+
+func GenerateJWTToken(user_id uint32, role uint8) string {
+	jwtKey := db.QueryOtherInfo("jwtKey")
+	if jwtKey == nil {
+		return ""
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"userid": user_id,
+		"role":   role,
+	})
+	tokenString, err := token.SignedString([]byte(jwtKey.(string)))
+	if err != nil {
+		log.Println(err)
+		return ""
+	}
+	return tokenString
 }

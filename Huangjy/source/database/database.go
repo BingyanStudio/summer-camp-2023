@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"errors"
 	"log"
 	"myserver/model"
 	"reflect"
@@ -35,7 +36,7 @@ func init() {
 	info_col = db.Collection("others")
 }
 
-func InsertUser(u *model.User) error {
+func InsertUser(u *model.UserInfo) error {
 	filter := bson.D{{Key: "info", Value: "maxid"}}
 	update := bson.D{{
 		Key: "$inc", Value: bson.D{{
@@ -51,7 +52,6 @@ func InsertUser(u *model.User) error {
 		log.Println(err)
 		return err
 	}
-	log.Println(d)
 	u.ID = uint32(d["value"].(int64))
 	if _, err := users_col.InsertOne(context.TODO(), u); err != nil {
 		log.Println(err)
@@ -60,15 +60,15 @@ func InsertUser(u *model.User) error {
 	return nil
 }
 
-func QueryUser(filter *bson.D, opts ...*options.FindOptions) ([]*model.User, error) {
-	info, err := baseQuery(context.TODO(), filter, users_col, reflect.TypeOf(model.User{}), opts...)
+func QueryUser(filter *bson.D, opts ...*options.FindOptions) ([]*model.UserInfo, error) {
+	info, err := baseQuery(context.TODO(), filter, users_col, reflect.TypeOf(model.UserInfo{}), opts...)
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
-	users := make([]*model.User, len(info))
+	users := make([]*model.UserInfo, len(info))
 	for i, u := range info {
-		p := (*u).(model.User)
+		p := (*u).(model.UserInfo)
 		users[i] = &p
 	}
 	return users, nil
@@ -85,7 +85,7 @@ func UpdateUser(filter *bson.D, u *model.UserUpdate) error {
 		log.Println(err)
 		return err
 	} else if result.MatchedCount == 0 {
-		log.Println("No document matched the filter")
+		errors.New("No document matched the filter")
 	}
 	return nil
 }
@@ -96,9 +96,22 @@ func DeleteUser(filter *bson.D) error {
 		log.Println(err)
 		return err
 	} else if result.DeletedCount == 0 {
-		log.Println("No document matched the filter")
+		return errors.New("No document matched the filter")
 	}
 	return nil
+}
+
+func QueryOtherInfo(info string) interface{} {
+	result := info_col.FindOne(context.TODO(), &bson.D{{"info", info}})
+	if result == nil {
+		return nil
+	}
+	var result_map map[string]interface{}
+	if err := result.Decode(&result_map); err != nil {
+		log.Println(err)
+		return nil
+	}
+	return result_map["value"]
 }
 
 func baseQuery(ctx context.Context, filter *bson.D, c *mongo.Collection, t reflect.Type, opts ...*options.FindOptions) ([]*interface{}, error) {
