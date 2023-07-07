@@ -1,0 +1,5 @@
+{
+    "go.proxyToolsCommand": "GOPROXY=https://goproxy.cn,direct",
+    "go.useLanguageServer": true
+
+}
