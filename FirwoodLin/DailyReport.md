@@ -58,3 +58,21 @@
 **杂记**
 -   疑惑：golang 中使用文件夹名还是 package 名进行导入
 -   TODO：调用 validate 函数进行数据校验
+
+# 07-07
+
+-   阶段性成果：热身项目基本完成 [link](https://github.com/FirwoodLin/Projects-BingyanSummer2023/tree/main/WarmUp)
+    -   Session 相关
+        -   中间件校验时，如果 Session 过期，进行重定向
+        -   每次成功校验 Session,就延长 Session 的有效期（TODO）   
+    -   查询相关
+        -   查询单条记录要添加`Where`条件。批量查询不加条件
+        -   使用`Table`指定查询表，`Select`方法指定要查询的字段，避免创建新模型和模型间的转化
+    -   小功能：Session 延期；`viper`配置读取；完善了 API 文档的 Reponse 部分
+    -   要继续学习的小点：项目中 Error 的规范；日志（log）系统的规范
+    -   一些反思：先设计 API 接口，再进行实现。比如返回值的设计，在后期开发过程中产生了对`IsAdmin`字段的需求，但前期没有考虑到，导致需要进行重构。
+    -   还可以改进的地方：使用邮箱**或者**手机号登陆
+
+-   商城项目进展
+    -   ~~新建文件夹~~
+    -   了解商城项目数据库的设计
