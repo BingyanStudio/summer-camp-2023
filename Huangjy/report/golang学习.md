@@ -98,3 +98,45 @@ func baseQuery(ctx context.Context, filter *bson.D, c *mongo.Collection, t refle
 }
 ```
 在这里，函数接受一个`reflect.Type`的参数，通过`reflect.New`按照这个类型定义一个新变量`reflect.Value`，这个Value是指向类型与所传入结构相同类型的结构的指针，将这个Value传入Decode解码后，用Elem方法解指针，最后加入到切片中返回。
+
+### 注意变量隐藏
+
+> 变量隐藏（variable shadowing）是指在一个作用域（scope）中声明一个变量，它和外层作用域中的同名变量发生了冲突，导致外层的变量被隐藏了。
+
+``` Go
+package main
+
+import "fmt"
+
+var x int = 1
+
+func main() {
+	x := 10
+	if x := 100; x > 0 {
+		fmt.Printf("%v ", x)
+	}
+	fmt.Printf("%v ", x)
+	foo()
+}
+
+func foo() {
+	fmt.Printf("%v ", x)
+}
+```
+
+运行结果是
+> 100 10 1
+
+可以发现，函数外的x，函数内的x分别被隐藏了。有时候，这会导致一些意想不到的错误
+
+``` Go
+func main() {
+	var u int
+	if u, err := doSomething(); err != nil {
+		// 错误处理
+	}
+	use(u) 
+}
+```
+
+一般的短变量声明必须至少有一个是从未声明过的，这意味着如果 ` u, err := doSomething() `在if外，u可以被正常赋值，然而在if中却不然，u被隐藏，导致后面使用u时其实总是0。
