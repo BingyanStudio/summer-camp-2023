@@ -63,8 +63,8 @@ COMMENT='医生表'：为表提供一个注释，用于描述表的用途或特�
 
 	//-------4、新增数据--------  
 
-/*	
-result, err := db.Exec("insert into doctor_tb(name,age,sex,addTime) values(?,?,?,Now())", "全医生", 40, 1)
+
+result, err := db.Exec("insert into doctor_tb(name,age,sex,addTime) values(?,?,?,Now())", "叶子", 90, 1)
 if err != nil {  
    fmt.Println("新增数据错误", err)  
    return  
@@ -72,10 +72,10 @@ if err != nil {
 newID, _ := result.LastInsertId() //新增数据的ID  
 i, _ := result.RowsAffected()     //受影响行数  
 fmt.Printf("新增的数据ID：%d , 受影响行数：%d \n", newID, i)
-*/
 
 
-/*
+
+
 //-------2、查询单条数据--------  
 //定义接收数据的结构  
 var doc Doctor  
@@ -86,7 +86,10 @@ err = rows.Scan(&doc.ID, &doc.Name, &doc.Age, &doc.Sex, &doc.AddTime) // 用于�
 //err 是一个错误类型的值 (error)。在调用 rows.Scan() 方法时，如果出现错误，会将该错误赋值给 err 变量。如果没有错误发生，err 将为 nil。
 //使用 rows.Scan() 方法将查询结果的列值扫描并存储到 doc 变量对应的字段中。在这里，我们传入了 &doc.ID、&doc.Name、&doc.Age、&doc.Sex 和 &doc.AddTime，将查询结果的各个列值扫描到对应的 Doctor 结构体字段中。
 fmt.Println("单条数据结果：", doc,rows,err)
-*/
+
+
+
+
 
 //-------3、查询数据列表--------  
 rows2, err := db.Query("select * from doctor_tb where age > ?", 30)  //查询
@@ -103,6 +106,51 @@ for rows2.Next() {
     docList = append(docList, doc2)  
 }  
 fmt.Println("多条数据查询结果", docList)
+
+
+//-------5、修改数据--------  
+result2, err := db.Exec("update doctor_tb set age=20 where id = ?", 1)  
+if err != nil {  
+   fmt.Println("修改数据错误", err)  
+   return  
+}  
+i2, _ := result2.RowsAffected() //受影响行数  
+fmt.Printf("受影响行数：%d \n", i2)
+
+//-------6、删除数据--------  
+result3, err := db.Exec("delete from doctor_tb where name = ?", "林医生")  
+if err != nil {  
+   fmt.Println("删除数据错误", err)  
+   return  
+}  
+i3, _ := result3.RowsAffected()  
+fmt.Printf("受影响行数：%d \n", i3)
+
+//-------7、事务\--------  
+tx, _ := db.Begin()  //在数据库连接上创建一个事务对象tx。db是一个数据库连接对象，Begin()方法用于开始一个新的事务。_是用于忽略返回的错误值的占位符。
+result4, _ := tx.Exec("update doctor_tb set age = age + 1 where name = ?", "钟南山")  
+result5, _ := tx.Exec("update doctor_tb set age = age + 1 where name = ?", "叶子")  //用事务对象tx执行更新操作，将名字为"钟南山"的医生的年龄加1。Exec()方法用于执行SQL语句，并返回一个结果对象result4
+  
+//影响行数，为0则失败
+i4, _ := result4.RowsAffected()  
+i5, _ := result5.RowsAffected()  
+if i4 > 0 && i5 > 0 {  
+   //2条数据都更新成功才提交事务  //如果两条更新语句都成功执行，则提交事务，将之前的操作永久保存到数据库中。Commit()方法用于提交事务。
+  err = tx.Commit()  
+   if err != nil {  
+      fmt.Println("事务提交失败", err)  
+      return  
+  }  
+   fmt.Println("事务提交成功")  
+} else {  
+   //否则回退事务  
+  err = tx.Rollback()  
+   if err != nil {  
+      fmt.Println("回退事务失败", err)  
+      return  
+  }  
+   fmt.Println("回退事务成功")  
+}
 }
 
 
