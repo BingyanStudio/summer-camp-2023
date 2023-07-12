@@ -1,0 +1,12 @@
+{
+    "Database":{
+        "mysql":{
+            "Username":"root",
+            "Password":"123456",
+            "Name":"membersys",
+            "Hostname":"localhost",
+            "Port":"3306",
+            "Parameter":""
+        }
+    }
+}
