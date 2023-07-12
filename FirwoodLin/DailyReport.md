@@ -93,4 +93,47 @@
     - 示例项目中使用了手写 SQL，没有使用外键
     - 在最后一次试验中，实现了外键查询，但是没有搞明白原理
 - 模型的设计
-  - 函数的参数可以封装为`xxxParam`结构体，
+  - 函数的参数可以封装为`xxxParam`结构体
+
+# 07-11
+
+- 数据库设计相关
+
+  - 价格使用 int 存储，单位为分
+  - 外键不是必须的，只是在数据库层面保证约束条件奏效；也可以在程序逻辑层面实现，而不使用外键
+    - 但是定义外键可以在一定程度上简化查询，无需指定联合条件（使用 GORM 时）
+  - 参考闲鱼“买卖”功能：可以在 Order 表中添加`userID`和`buyerID`实现数据共享；每个用户同时是买家&卖家
+
+- GORM 使用相关
+
+  - ```go
+    // 指定了模型
+    db := global.GVA_DB.Model(&manage.MallGoodsInfo{})
+    // 指定了查询条件
+    db.Where("goods_category_id= ?", goodsCategoryId)
+    // 进行查询
+    err = db.Count(&total).Error
+    // 进行排序
+    db.Order("goods_id desc")
+    // 存储结果
+    err = db.Limit(limit).Offset(offset).Find(&goodsList).Error
+    ```
+
+    上述代码实际转化为 MySQL 语句：
+
+    ```mysql
+    -- 查询符合条件的记录数
+    SELECT COUNT(*) FROM `mall_goods_info` WHERE (goods_category_id=goodsCategoryId);
+    -- 查询符合条件的记录，并按照 `goods_id` 字段降序排序，限制返回记录数和偏移量
+    SELECT * FROM `mall_goods_info` WHERE (goods_category_id=goodsCategoryId) ORDER BY `goods_id` DESC LIMIT limit OFFSET offset;
+    ```
+
+    可以看到，WHERE 语句得到了保留，而 COUNT 语句没有继承。
+
+  - 
+
+- 将注册登陆功能（SESSIONID）进行了迁移，后期考虑使用 JWT 进行重构
+
+- 商品查询功能（疑问：正则是怎么运用的）
+
+TODO：测试！测试！测试！
