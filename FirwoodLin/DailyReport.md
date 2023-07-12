@@ -107,7 +107,7 @@
 - GORM 使用相关
 
   - ```go
-    // 指定了模型
+    // 指定了模型：从全局的 DB 到 local 的 db
     db := global.GVA_DB.Model(&manage.MallGoodsInfo{})
     // 指定了查询条件
     db.Where("goods_category_id= ?", goodsCategoryId)
@@ -115,7 +115,7 @@
     err = db.Count(&total).Error
     // 进行排序
     db.Order("goods_id desc")
-    // 存储结果
+    // 存储结果 *** 注意使用存储结果到返回值当中！！！否则只是改变了 db 的属性而已
     err = db.Limit(limit).Offset(offset).Find(&goodsList).Error
     ```
 
@@ -130,10 +130,21 @@
 
     可以看到，WHERE 语句得到了保留，而 COUNT 语句没有继承。
 
-  - 
-
 - 将注册登陆功能（SESSIONID）进行了迁移，后期考虑使用 JWT 进行重构
 
-- 商品查询功能（疑问：正则是怎么运用的）
+- 商品查询功能（疑问：正则是怎么运用的）（model 层）
 
 TODO：测试！测试！测试！
+
+# 07-13
+
+- 新知
+  - RFC 7807 关于 RESTful API 中，返回错误时的格式规范
+  - SQL 中的锁
+- 开发
+  - 完成商品查询功能（service 层），完成对数组类型的 Query 参数解析
+  - 对登陆注册，分类查询，商品查询的接口进行了测试
+  - 核心功能：下单（开发中）（商品的修改完成，还差新建订单）
+- TODO
+  - 下单时价格核验
+  - 完成更新商品图片功能（对象存储 SDK 的操作，文件上传和下载）
