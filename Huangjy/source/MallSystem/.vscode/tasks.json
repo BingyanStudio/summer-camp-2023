@@ -1,0 +1,18 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "go",
+			"label": "go: build package",
+			"command": "run",
+			"args": [
+				"${fileDirname}"
+			],
+			"problemMatcher": [
+				"$go"
+			],
+			"group": "build",
+			"detail": "cd /home/ikuuxi/go/src/summer-camp-2023-BE/Huangjy/source/MallSystem; go build ${fileDirname}"
+		}
+	]
+}

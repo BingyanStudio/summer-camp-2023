@@ -1,0 +1,13 @@
+{
+	"MongoDB": {
+		"Hostname": "127.0.0.1",
+		"Port": "27017",
+		"Username": "admin",
+		"Password": "0000",
+		"Database": "MallSystem",
+		"Timeout": 10
+	},
+	"JWT": {
+		"SecretKey": "123456"
+	}
+}
