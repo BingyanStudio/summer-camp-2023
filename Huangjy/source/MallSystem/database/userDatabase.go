@@ -9,21 +9,21 @@ import (
 )
 
 const (
-	colName string = "users"
+	userColName string = "users"
 )
 
 var (
-	col *mongo.Collection
+	userCol *mongo.Collection
 )
 
 func initUserCollection() {
-	col = db.Collection(colName)
+	userCol = db.Collection(userColName)
 }
 
 func InsertOneUser(u *model.UserInfo) error {
 	ctx, cancel := makeContext()
 	defer cancel()
-	if _, err := col.InsertOne(ctx, *u); err != nil {
+	if _, err := userCol.InsertOne(ctx, *u); err != nil {
 		return err
 	}
 	return nil
@@ -33,7 +33,7 @@ func QueryOneUser(filter *bson.M) (*model.UserInfo, error) {
 	var u model.UserInfo
 	ctx, cancel := makeContext()
 	defer cancel()
-	result := col.FindOne(ctx, filter)
+	result := userCol.FindOne(ctx, filter)
 	if err := result.Err(); err != nil {
 		return nil, err
 	}

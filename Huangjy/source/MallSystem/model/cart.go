@@ -6,17 +6,12 @@ import (
 
 /*
  *	购物车结构体
- *
+ *	购物车ID
+ *	用户ID
+ *	所有的商品ID
  */
 type Cart struct {
 	ID      primitive.ObjectID   `bson:"_id,omitempty"`
 	UserID  primitive.ObjectID   `bson:"userid"`
 	ItemIDs []primitive.ObjectID `bson:"itemids"`
-}
-
-type CartItem struct {
-	ID          primitive.ObjectID `bson:"_id,omitempty"`
-	CartID      primitive.ObjectID `bson:"cartid"`
-	CommodityID primitive.ObjectID `bson:"commodityid"`
-	Count       int                `bson:"count"`
 }

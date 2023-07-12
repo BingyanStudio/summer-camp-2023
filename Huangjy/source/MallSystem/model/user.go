@@ -23,6 +23,8 @@ type UserInfo struct {
 	BeViewedCount int                `json:"beViewedCount" form:"-" binding:"-" bson:"beViewedCount"`
 }
 
+/*****************************************/
+
 /*
  *	登陆时，用户的信息
  *	用户的姓名

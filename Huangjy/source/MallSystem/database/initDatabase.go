@@ -49,5 +49,6 @@ func InitDatabase() {
 	db = client.Database(database)
 
 	initUserCollection()
+	initCommodityCollection()
 
 }

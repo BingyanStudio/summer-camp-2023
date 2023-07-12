@@ -30,7 +30,7 @@ func MiddlewareJWTAuthorize() gin.HandlerFunc {
 		}
 		tokenString := auth[len("Bearer "):]
 		token, err := jwt.ParseWithClaims(tokenString, &jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
-			return viper.GetString("JWT.SecretKey"), nil
+			return []byte(viper.GetString("JWT.SecretKey")), nil
 		})
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, response.UnautherizedError)
