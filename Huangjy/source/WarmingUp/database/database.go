@@ -85,7 +85,7 @@ func UpdateUser(filter *bson.D, u *model.UserUpdate) error {
 		log.Println(err)
 		return err
 	} else if result.MatchedCount == 0 {
-		errors.New("No document matched the filter")
+		return errors.New("No document matched the filter")
 	}
 	return nil
 }

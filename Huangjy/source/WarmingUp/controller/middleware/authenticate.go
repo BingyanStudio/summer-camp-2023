@@ -21,18 +21,20 @@ func Authorizate(role_needed uint8) gin.HandlerFunc {
 				"data":    "",
 			})
 			c.Abort()
+			return
 		}
 		tokenString := authHeader[len("Bearer "):]
 		token, err := jwt.ParseWithClaims(tokenString, &jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
 			return jwtKey, nil
 		})
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
+			c.JSON(http.StatusUnauthorized, gin.H{
 				"succeed": false,
-				"error":   "Sorry, we come across some problem",
+				"error":   "Invalid token",
 				"data":    "",
 			})
 			c.Abort()
+			return
 		}
 		claims, ok := token.Claims.(*jwt.MapClaims)
 		if !ok || !token.Valid {
@@ -42,6 +44,7 @@ func Authorizate(role_needed uint8) gin.HandlerFunc {
 				"data":    "",
 			})
 			c.Abort()
+			return
 		}
 		role := uint8((*claims)["role"].(float64))
 		id := uint32((*claims)["userid"].(float64))
@@ -52,6 +55,7 @@ func Authorizate(role_needed uint8) gin.HandlerFunc {
 				"data":    "",
 			})
 			c.Abort()
+			return
 		}
 		c.Set("curUser", &model.UserInfo{
 			ID:   id,

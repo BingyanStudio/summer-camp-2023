@@ -15,8 +15,8 @@ const (
 )
 
 type UserUpdate struct {
-	Info  string      `json:"info" bson:"info" form:"info"`
-	Value interface{} `json:"value" bson:"value" form:"value"`
+	Info  string `json:"info" bson:"info" form:"info"`
+	Value string `json:"value" bson:"value" form:"value"`
 }
 
 type UserLogin struct {

@@ -12,7 +12,7 @@
 				"$go"
 			],
 			"group": "build",
-			"detail": "cd /home/ikuuxi/go/src/summer-camp-2023-BE/Huangjy/source; go build ${fileDirname}"
+			"detail": "cd /home/ikuuxi/go/src/summer-camp-2023-BE/Huangjy/source/MallSystem; go build ${fileDirname}"
 		}
 	]
 }

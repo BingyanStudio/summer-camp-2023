@@ -108,10 +108,7 @@ func LoginHandler(c *gin.Context) {
 func UserUpdateInfoHandler(c *gin.Context) {
 	var update model.UserUpdate
 	err := c.ShouldBind(&update)
-	log.Println(update)
 	u, ok := c.Get("curUser")
-	log.Println(u, ok, err)
-	log.Println("to there 1", err != nil)
 	if err != nil || !ok {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"succeed": false,
@@ -120,11 +117,13 @@ func UserUpdateInfoHandler(c *gin.Context) {
 		})
 		return
 	}
-	log.Println("to there 2")
-	if err := db.UpdateUser(&bson.D{{"id", uint32(u.(*model.UserInfo).ID)}}, &update); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+	if err := db.UpdateUser(&bson.D{
+		{"id", uint32(u.(*model.UserInfo).ID)},
+		{update.Info, bson.M{"$exists": true}},
+	}, &update); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
 			"succeed": false,
-			"error":   "Sorry, we come across some problems",
+			"error":   err.Error(),
 			"data":    "",
 		})
 		return
