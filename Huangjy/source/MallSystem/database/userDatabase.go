@@ -24,7 +24,11 @@ func InsertOneUser(u *model.UserInfo) error {
 	ctx, cancel := makeContext()
 	defer cancel()
 	if _, err := userCol.InsertOne(ctx, *u); err != nil {
-		return err
+		if ctx.Err() != nil {
+			return ctx.Err()
+		} else {
+			return err
+		}
 	}
 	return nil
 }
@@ -35,7 +39,11 @@ func QueryOneUser(filter *bson.M) (*model.UserInfo, error) {
 	defer cancel()
 	result := userCol.FindOne(ctx, filter)
 	if err := result.Err(); err != nil {
-		return nil, err
+		if ctx.Err() != nil {
+			return nil, ctx.Err()
+		} else {
+			return nil, err
+		}
 	}
 	if err := result.Decode(&u); err != nil {
 		return nil, err

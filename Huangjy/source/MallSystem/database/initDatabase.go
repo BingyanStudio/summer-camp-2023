@@ -25,6 +25,10 @@ var (
 	db     *mongo.Database
 )
 
+func MakeSession() (mongo.Session, error) {
+	return client.StartSession()
+}
+
 func makeContext() (context.Context, context.CancelFunc) {
 	return context.WithTimeout(context.Background(), time.Duration(timeout)*time.Second)
 }
@@ -41,9 +45,9 @@ func InitDatabase() {
 
 	ctx, cancel := makeContext()
 	defer cancel()
-	c, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
-	if err != nil {
-		log.Fatal(err)
+	c, _ := mongo.Connect(ctx, options.Client().ApplyURI(uri))
+	if ctx.Err() != nil {
+		log.Fatal(ctx.Err())
 	}
 	client = c
 	db = client.Database(database)

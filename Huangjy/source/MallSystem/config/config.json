@@ -5,7 +5,7 @@
 		"Username": "admin",
 		"Password": "0000",
 		"Database": "MallSystem",
-		"Timeout": 10
+		"Timeout": 5
 	},
 	"JWT": {
 		"SecretKey": "123456"

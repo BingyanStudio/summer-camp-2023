@@ -6,7 +6,9 @@ import (
 	"MallSystem/model/response"
 	"MallSystem/utils"
 	"context"
+	"log"
 	"net/http"
+	"reflect"
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
@@ -52,6 +54,9 @@ func UserLoginHandler(c *gin.Context) {
 		"username": l.Username,
 	})
 	if err != nil {
+		log.Println(err)
+		log.Println(reflect.TypeOf(err).Name())
+		log.Println(context.DeadlineExceeded)
 		if err == context.DeadlineExceeded {
 			c.JSON(http.StatusInternalServerError, response.TimeoutError)
 		} else {

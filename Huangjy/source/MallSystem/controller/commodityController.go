@@ -8,6 +8,7 @@ import (
 	"context"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
@@ -29,7 +30,7 @@ func GetCommoditiesHandler(c *gin.Context) {
 		category = int(model.All)
 	}
 	keyword := c.Query("keyword")
-	filter := bson.M{"title": primitive.Regex{Pattern: keyword, Options: "i"}}
+	filter := bson.M{"title": primitive.Regex{Pattern: keyword, Options: "i"}, "status": model.Selling}
 	opt := options.Find().SetSkip(int64(page * limit)).SetLimit(int64(limit))
 	results, err := database.QueryCommodities(&filter, opt)
 	infos := make([]model.CommoditySearchResult, 0)
@@ -53,6 +54,23 @@ func GetCommoditiesHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, response.MakeSucceedResponse(infos))
 }
 
+func GetOneCommodityHandler(c *gin.Context) {
+	commodityID, err := primitive.ObjectIDFromHex(c.Param("commodityID"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, response.MakeFailedResponse("没有找到商品"))
+	}
+	ci, err := database.QueryOneCommodity(&bson.M{"_id": commodityID})
+	if err != nil {
+		if err == context.DeadlineExceeded {
+			c.JSON(http.StatusInternalServerError, response.TimeoutError)
+		} else {
+			c.JSON(http.StatusBadRequest, response.MakeFailedResponse("没有找到商品"))
+		}
+		return
+	}
+	c.JSON(http.StatusOK, response.MakeSucceedResponse(*ci))
+}
+
 func GetHotKeywordHandler(c *gin.Context) {
 
 }
@@ -70,6 +88,8 @@ func PubCommodityHandler(c *gin.Context) {
 		return
 	}
 	ci.UserID, _ = primitive.ObjectIDFromHex(c.GetString("userid")[10:34])
+	ci.LaunchTime = time.Now()
+	ci.Status = model.Selling
 	if err := database.InsertOneCommodity(&ci); err != nil {
 		if err == context.DeadlineExceeded {
 			c.JSON(http.StatusInternalServerError, response.TimeoutError)
