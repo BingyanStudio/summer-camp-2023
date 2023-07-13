@@ -116,6 +116,7 @@
     // 进行排序
     db.Order("goods_id desc")
     // 存储结果 *** 注意使用存储结果到返回值当中！！！否则只是改变了 db 的属性而已
+
     err = db.Limit(limit).Offset(offset).Find(&goodsList).Error
     ```
 
@@ -129,6 +130,7 @@
     ```
 
     可以看到，WHERE 语句得到了保留，而 COUNT 语句没有继承。
+
 
 - 将注册登陆功能（SESSIONID）进行了迁移，后期考虑使用 JWT 进行重构
 
