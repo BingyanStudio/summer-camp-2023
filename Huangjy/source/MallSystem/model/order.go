@@ -21,6 +21,7 @@ const (
 	Shipped
 	Completed
 	Refunded
+	Canceled
 )
 
 /*
@@ -36,7 +37,7 @@ const (
  *	备注
  */
 type OrderInfo struct {
-	ID            primitive.ObjectID   `json:"id" bson:"_id omitempty" form:"-" binding:"-"`
+	ID            primitive.ObjectID   `json:"id" bson:"_id,omitempty" form:"-" binding:"-"`
 	UserID        primitive.ObjectID   `json:"userid" bson:"userid" form:"-" binding:"-"`
 	SellerID      primitive.ObjectID   `json:"sellerid" bson:"sellerid" form:"sellerid" binding:"required"`
 	Price         float64              `json:"price" bson:"price" form:"price" binding:"required"`

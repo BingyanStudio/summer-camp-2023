@@ -5,6 +5,7 @@ import (
 	"context"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -21,17 +22,8 @@ func initCommodityCollection() {
 	commodityCol = db.Collection(commodityColName)
 }
 
-func InsertOneCommodity(c *model.CommodityInfo) error {
-	ctx, cancel := makeContext()
-	defer cancel()
-	if _, err := commodityCol.InsertOne(ctx, *c); err != nil {
-		if ctx.Err() != nil {
-			return ctx.Err()
-		} else {
-			return err
-		}
-	}
-	return nil
+func InsertOneCommodity(c *model.CommodityInfo) (*primitive.ObjectID, error) {
+	return baseInsertOne(commodityCol, *c)
 }
 
 func QueryOneCommodity(filter *bson.M) (*model.CommodityInfo, error) {
@@ -67,6 +59,15 @@ func SetOneCommodityStatus(filter *bson.M, status model.CommodityStatus) error {
 		}
 	}
 	return nil
+}
+
+func IncreaseOneCommodityViewCount(filter *bson.M) {
+	ctx, cancel := makeContext()
+	defer cancel()
+	update := bson.M{
+		"$inc": bson.M{"viewCount": 1},
+	}
+	commodityCol.UpdateOne(ctx, filter, update)
 }
 
 func QueryCommodities(filter *bson.M, opts ...*options.FindOptions) ([]*model.CommodityInfo, error) {

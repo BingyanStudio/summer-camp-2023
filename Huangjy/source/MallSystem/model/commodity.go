@@ -63,7 +63,7 @@ type CommodityInfo struct {
 	Desc         string             `json:"desc" bson:"desc" form:"desc" binding:"required"`
 	Price        float64            `json:"price" bson:"price" form:"price" binding:"required"`
 	Category     CategoryIndex      `json:"category" bson:"category" form:"category" binding:"required"`
-	Picture      string             `json:"picture" bson:"picture" form:"picture" binding:"required"`
+	Picture      string             `json:"picture" bson:"picture" form:"-" binding:"-"`
 	ViewCount    int                `json:"viewCount" bson:"viewCount" form:"-" binding:"-"`
 	CollectCount int                `json:"collectCount" bson:"collectCount" form:"-" binding:"-"`
 	Status       CommodityStatus    `json:"status" bson:"status" form:"-" binding:"-"`

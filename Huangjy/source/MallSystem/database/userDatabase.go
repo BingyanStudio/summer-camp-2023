@@ -5,6 +5,7 @@ import (
 	_ "log"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -20,17 +21,8 @@ func initUserCollection() {
 	userCol = db.Collection(userColName)
 }
 
-func InsertOneUser(u *model.UserInfo) error {
-	ctx, cancel := makeContext()
-	defer cancel()
-	if _, err := userCol.InsertOne(ctx, *u); err != nil {
-		if ctx.Err() != nil {
-			return ctx.Err()
-		} else {
-			return err
-		}
-	}
-	return nil
+func InsertOneUser(u *model.UserInfo) (*primitive.ObjectID, error) {
+	return baseInsertOne(userCol, *u)
 }
 
 func QueryOneUser(filter *bson.M) (*model.UserInfo, error) {

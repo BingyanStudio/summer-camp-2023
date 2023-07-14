@@ -30,15 +30,16 @@ func UserRegisterHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, response.InvalidInfoError)
 		return
 	}
-	if err := database.InsertOneUser(&u); err != nil {
+	if id, err := database.InsertOneUser(&u); err != nil {
 		if err == context.DeadlineExceeded {
 			c.JSON(http.StatusInternalServerError, response.TimeoutError)
 		} else {
 			c.JSON(http.StatusBadRequest, response.MakeFailedResponse("用户名已存在"))
 		}
 		return
+	} else {
+		c.JSON(http.StatusOK, response.MakeSucceedResponse(*id))
 	}
-	c.JSON(http.StatusOK, response.MakeSucceedResponse(""))
 }
 
 func UserLoginHandler(c *gin.Context) {

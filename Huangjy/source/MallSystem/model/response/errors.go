@@ -7,7 +7,7 @@ package response
  *	请求超时
  */
 var (
-	UnautherizedError = MakeFailedResponse("Please login first")
-	InvalidInfoError  = MakeFailedResponse("Invalid Info")
-	TimeoutError      = MakeFailedResponse("Timeout")
+	UnautherizedError = MakeFailedResponse("请先登录")
+	InvalidInfoError  = MakeFailedResponse("不合法的请求")
+	TimeoutError      = MakeFailedResponse("服务超时")
 )
