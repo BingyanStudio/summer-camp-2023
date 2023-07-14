@@ -116,7 +116,7 @@
     // 进行排序
     db.Order("goods_id desc")
     // 存储结果 *** 注意使用存储结果到返回值当中！！！否则只是改变了 db 的属性而已
-
+    
     err = db.Limit(limit).Offset(offset).Find(&goodsList).Error
     ```
 
@@ -192,3 +192,13 @@ TODO：测试！测试！测试！
   - 设置 Google 搜索结果语言：給浏览器添加搜索引擎`https://www.google.com/search?q=%s&lr=lang_zh-CN|lang_en`
   - 支付信息的回调：支付宝：向用户指定的 URL POST 一个支付信息表单
   - JSON Schema 中 array 类型
+
+# 07-14
+
+- 开发
+  - 个人主页 & 浏览量
+  - 图片上传到 COS 
+  - 设计新项目的登陆注册 API
+- 新知
+  - 循环引用问题：项目分层的意义之一。实例：在 utli 中创建了结构体，作为参数传递给，并在 model 中调用，导致发生循环引用
+  - JSON 中的数据类型：an object (JSON object)，object 就是 JSON，相当于在 JSON 中嵌套 JSON
