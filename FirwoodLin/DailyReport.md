@@ -29,7 +29,7 @@
    -  检验用户是否存在：进行查询，通过 `.RowsAffected == 0` 判断查询的结果
 -  Golang 开发规范
    -  bool 类型的函数，直接返回判断表达式的值；不使用 if 语句
--  （未完成）注册成功后返回 ~~cookie~~ 包含 sessionId 的 cookie
+-  （未完成）注册成功后返回 ~~cookie~~ 包含 sessionID 的 cookie
    -  Session 的生成、存储：由于高频读写，选择 Redis 作为数据库
 
 # 07-06
@@ -49,7 +49,7 @@
     -   APIFox 中如何设置自动获取 Cookie [link](https://apifox.com/blog/cookies-and-token/)
         -   登陆后设置`后置操作`，将 Cookie 保存到环境变量中
         -   后续操作中，将需要 Cookie 的操作处，填为环境变量
-    -   使用中间件校验 SessionId
+    -   使用中间件校验 SessionID
     -   更新个人信息的时候使用`Updates`进行不确定 key 的数量的更新
     -   需要将 UserID 进行一系列传递，调试时可以打断点观察
         -   统一变量命名规则！！！（`UserID` vs `UserId`）
@@ -116,7 +116,7 @@
     // 进行排序
     db.Order("goods_id desc")
     // 存储结果 *** 注意使用存储结果到返回值当中！！！否则只是改变了 db 的属性而已
-
+    
     err = db.Limit(limit).Offset(offset).Find(&goodsList).Error
     ```
 
@@ -192,3 +192,25 @@ TODO：测试！测试！测试！
   - 设置 Google 搜索结果语言：給浏览器添加搜索引擎`https://www.google.com/search?q=%s&lr=lang_zh-CN|lang_en`
   - 支付信息的回调：支付宝：向用户指定的 URL POST 一个支付信息表单
   - JSON Schema 中 array 类型
+
+# 07-14
+
+- 开发
+  - 个人主页 & 浏览量
+  - 图片上传到 COS 
+  - 设计新项目的登陆注册 API
+  
+- 新知
+  - 循环引用问题：项目分层的意义之一。实例：在 utli 中创建了结构体，作为参数传递给，并在 model 中调用，导致发生循环引用
+  
+  - JSON 中的数据类型：an object (JSON object)，object 就是 JSON，相当于在 JSON 中嵌套 JSON
+  
+# 07-15
+
+- 新知
+  - nginx 进行反向代理；客户端与 nginx 之间通过 HTTPS 进行通信，nginx 和后端之间通过 HTTP 进行通信
+  - RESTful API 的设计：使用复数而非单数~~，把大部分任务交给 GPT~~
+  - 从 kkk 处得知对象存储可以由前端直传 [文件上传](https://cloud.tencent.com/document/product/436/9067)[签名生成](https://cloud.tencent.com/document/product/436/7778#sdk-.E7.AD.BE.E5.90.8D.E5.AE.9E.E7.8E.B0)
+- 开发
+  - 约定 API 文档
+
