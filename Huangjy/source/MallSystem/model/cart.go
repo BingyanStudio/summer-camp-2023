@@ -13,5 +13,5 @@ import (
 type Cart struct {
 	ID      primitive.ObjectID   `bson:"_id,omitempty"`
 	UserID  primitive.ObjectID   `bson:"userid"`
-	ItemIDs []primitive.ObjectID `bson:"itemids"`
+	ItemIDs []primitive.ObjectID `bson:"itemsid"`
 }

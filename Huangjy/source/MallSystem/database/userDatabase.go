@@ -25,6 +25,15 @@ func InsertOneUser(u *model.UserInfo) (*primitive.ObjectID, error) {
 	return baseInsertOne(userCol, *u)
 }
 
+func IncreaseOneUserBeViewedCount(filter *bson.M) {
+	ctx, cancel := makeContext()
+	defer cancel()
+	update := bson.M{
+		"$inc": bson.M{"beViewedCount": 1},
+	}
+	userCol.UpdateOne(ctx, filter, update)
+}
+
 func QueryOneUser(filter *bson.M) (*model.UserInfo, error) {
 	var u model.UserInfo
 	ctx, cancel := makeContext()

@@ -11,6 +11,8 @@ func SetupRoutes() *gin.Engine {
 	registerUserRoutes(e)
 	registerCommodityRoutes(e)
 	registerPurchaseRoutes(e)
+	registerImageRoutes(e)
+	registerCartRoutes(e)
 
 	return e
 }

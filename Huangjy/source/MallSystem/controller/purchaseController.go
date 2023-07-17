@@ -19,22 +19,22 @@ func PurchaseHandler(c *gin.Context) {
 	var (
 		o model.OrderInfo
 	)
-	sellerid, err := primitive.ObjectIDFromHex(c.Query("sellerid"))
+	sellerid, err := primitive.ObjectIDFromHex(c.PostForm("sellerid"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, response.InvalidInfoError)
 		return
 	}
-	commoditiesid := c.QueryArray("commodities")
+	commoditiesid := c.PostFormArray("commoditiesid")
 	if len(commoditiesid) == 0 {
 		c.JSON(http.StatusBadRequest, response.InvalidInfoError)
 		return
 	}
-	o.Price, err = strconv.ParseFloat(c.Query("price"), 64)
+	o.Price, err = strconv.ParseFloat(c.PostForm("price"), 64)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, response.InvalidInfoError)
 		return
 	}
-	address, err := primitive.ObjectIDFromHex(c.Query("address"))
+	address, err := primitive.ObjectIDFromHex(c.PostForm("addressid"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, response.InvalidInfoError)
 		return

@@ -6,7 +6,9 @@ import (
 	"MallSystem/model/response"
 	"MallSystem/utils"
 	"context"
+	"log"
 	"net/http"
+	"path/filepath"
 	"strconv"
 	"time"
 
@@ -91,22 +93,43 @@ func PubCommodityHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, response.InvalidInfoError)
 		return
 	}
+
+	file, err := c.FormFile("image")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, response.MakeFailedResponse("上传图片失败"))
+		return
+	}
+	if file.Size > 2*1024*1024 {
+		c.JSON(http.StatusBadRequest, response.MakeFailedResponse("图片大小必须小于2M"))
+		return
+	}
+	if filepath.Ext(file.Filename) != ".png" {
+		c.JSON(http.StatusBadRequest, response.MakeFailedResponse("不支持的图片格式"))
+		return
+	}
 	if err := utils.ValidateCommodityInfo(&ci); err != nil {
 		c.JSON(http.StatusBadRequest, response.MakeFailedResponse(err.Error()))
 		return
 	}
+
 	ci.UserID, _ = primitive.ObjectIDFromHex(c.GetString("userid")[10:34])
 	ci.LaunchTime = time.Now()
 	ci.Status = model.Selling
-	if id, err := database.InsertOneCommodity(&ci); err != nil {
+
+	id, err := database.InsertOneCommodity(&ci)
+	if err != nil {
 		if err == context.DeadlineExceeded {
 			c.JSON(http.StatusInternalServerError, response.TimeoutError)
 		} else {
 			c.JSON(http.StatusBadRequest, response.MakeFailedResponse(err.Error()))
 		}
 		return
-	} else {
-		c.JSON(http.StatusOK, response.MakeSucceedResponse(*id))
-		// 下周在这里处理图片上传问题。
 	}
+	filename := "commodity-" + id.Hex() + filepath.Ext(file.Filename)
+	if err := utils.SaveImage(file, filename); err != nil {
+		log.Println(err)
+		return
+	}
+	database.SetOneCommodityImage(&bson.M{"_id": id}, filename)
+	c.JSON(http.StatusOK, response.MakeSucceedResponse(id.Hex()))
 }

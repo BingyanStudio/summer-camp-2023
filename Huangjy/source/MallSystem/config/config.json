@@ -9,5 +9,8 @@
 	},
 	"JWT": {
 		"SecretKey": "123456"
+	},
+	"Image": {
+		"Source": "/home/ikuuxi/MallSystem/image"
 	}
 }

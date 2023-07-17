@@ -61,6 +61,23 @@ func SetOneCommodityStatus(filter *bson.M, status model.CommodityStatus) error {
 	return nil
 }
 
+func SetOneCommodityImage(filter *bson.M, src string) error {
+	ctx, cancel := makeContext()
+	defer cancel()
+	update := bson.M{
+		"$set": bson.M{"picture": src},
+	}
+	_, err := commodityCol.UpdateOne(ctx, filter, update)
+	if err != nil {
+		if ctx.Err() != nil {
+			return ctx.Err()
+		} else {
+			return err
+		}
+	}
+	return nil
+}
+
 func IncreaseOneCommodityViewCount(filter *bson.M) {
 	ctx, cancel := makeContext()
 	defer cancel()

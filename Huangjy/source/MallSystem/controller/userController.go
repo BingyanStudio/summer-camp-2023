@@ -6,12 +6,11 @@ import (
 	"MallSystem/model/response"
 	"MallSystem/utils"
 	"context"
-	"log"
 	"net/http"
-	"reflect"
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func UserRegisterHandler(c *gin.Context) {
@@ -55,9 +54,6 @@ func UserLoginHandler(c *gin.Context) {
 		"username": l.Username,
 	})
 	if err != nil {
-		log.Println(err)
-		log.Println(reflect.TypeOf(err).Name())
-		log.Println(context.DeadlineExceeded)
 		if err == context.DeadlineExceeded {
 			c.JSON(http.StatusInternalServerError, response.TimeoutError)
 		} else {
@@ -70,4 +66,25 @@ func UserLoginHandler(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, response.MakeSucceedResponse(utils.GenerateJWTToken(u.ID.String())))
+}
+
+func UserInfoHandler(c *gin.Context) {
+	userid := c.Param("userid")
+	id, err := primitive.ObjectIDFromHex(userid)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, response.InvalidInfoError)
+		return
+	}
+	u, err := database.QueryOneUser(&bson.M{"_id": id})
+	if err != nil {
+		c.JSON(http.StatusBadRequest, response.InvalidInfoError)
+		return
+	}
+	database.IncreaseOneUserBeViewedCount(&bson.M{"_id": id})
+	c.JSON(http.StatusOK, response.MakeSucceedResponse(*u))
+}
+
+func SelfInfoHandler(c *gin.Context) {
+	userid := c.GetString("userid")[10:34]
+	c.Redirect(http.StatusSeeOther, "/user/"+userid)
 }
