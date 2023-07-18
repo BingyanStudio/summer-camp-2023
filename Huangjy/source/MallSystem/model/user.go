@@ -5,6 +5,10 @@ import (
 )
 
 /*
+ *	后台管理部分应该和前台的用户部分完全分离，独立存储管理员的相关信息
+ */
+
+/*
  *	用户信息的结构体
  *	用户ID（在表单中不传递）
  *	用户姓名和昵称（必填项）
@@ -22,6 +26,8 @@ type UserInfo struct {
 	CollectCount  int                `json:"collectCount" form:"-" binding:"-" bson:"collectCount"`
 	BeViewedCount int                `json:"beViewedCount" form:"-" binding:"-" bson:"beViewedCount"`
 }
+
+/*****************************************/
 
 /*
  *	登陆时，用户的信息

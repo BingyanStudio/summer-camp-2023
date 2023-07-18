@@ -10,6 +10,9 @@ func SetupRoutes() *gin.Engine {
 	// 注册各路由
 	registerUserRoutes(e)
 	registerCommodityRoutes(e)
+	registerPurchaseRoutes(e)
+	registerImageRoutes(e)
+	registerCartRoutes(e)
 
 	return e
 }
